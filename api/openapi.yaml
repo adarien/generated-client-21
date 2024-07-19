@@ -1,0 +1,3419 @@
+openapi: 3.0.1
+info:
+  title: School21 OpenAPI Specification
+  version: v1
+servers:
+- url: https://edu-api.21-school.ru/services/21-school/api
+security:
+- Authorization: []
+tags:
+- description: Operations related to campuses
+  name: Campus
+- description: Operations related to clusters
+  name: Cluster
+- description: Operations related to events
+  name: Event
+- description: Operations related to sale
+  name: Sale
+- description: Operations related to projects
+  name: Project
+- description: Operations related to coalitions
+  name: Coalition
+- description: Operations related to participants
+  name: Participant
+- description: Operations related to courses
+  name: Course
+- description: Operations related to the graph
+  name: Graph
+paths:
+  /v1/sales:
+    get:
+      operationId: getSales
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesV1DTO'
+          description: Sales information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns current sales’ statuses within parallel
+      tags:
+      - Sale
+  /v1/projects/{projectId}:
+    get:
+      operationId: getProjectByProjectId
+      parameters:
+      - description: Project ID
+        example: 123131
+        explode: false
+        in: path
+        name: projectId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectV1DTO'
+          description: Project information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns project information by ID
+      tags:
+      - Project
+  /v1/projects/{projectId}/participants:
+    get:
+      operationId: getLoginsByProjectId
+      parameters:
+      - description: Project ID
+        example: 123131
+        explode: false
+        in: path
+        name: projectId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      - description: Project status
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - ASSIGNED
+          - REGISTERED
+          - IN_PROGRESS
+          - IN_REVIEWS
+          - ACCEPTED
+          - FAILED
+          type: string
+        style: form
+      - description: Campus ID
+        example: 96098f4b-5708-4c42-a62c-6893419169b3
+        explode: true
+        in: query
+        name: campusId
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantLoginsV1DTO'
+          description: List of participants
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of participants by project ID
+      tags:
+      - Project
+  /v1/participants/{login}:
+    get:
+      operationId: getParticipantByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantV1DTO'
+          description: Basic participant information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns basic participant information by login
+      tags:
+      - Participant
+  /v1/participants/{login}/workstation:
+    get:
+      operationId: getParticipantWorkstationByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantWorkstationV1DTO'
+          description: Participant workstation
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a participant workstation by login
+      tags:
+      - Participant
+  /v1/participants/{login}/skills:
+    get:
+      operationId: getSoftSkillByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantSkillsV1DTO'
+          description: Participant skill points
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant skill points by login
+      tags:
+      - Participant
+  /v1/participants/{login}/projects:
+    get:
+      operationId: getParticipantProjectsByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      - description: Project status
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - ASSIGNED
+          - REGISTERED
+          - IN_PROGRESS
+          - IN_REVIEWS
+          - ACCEPTED
+          - FAILED
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantProjectsV1DTO'
+          description: Participant projects information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant projects information by login
+      tags:
+      - Participant
+  /v1/participants/{login}/projects/{projectId}:
+    get:
+      operationId: getParticipantProjectByLoginAndProjectId
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Project ID
+        example: 12311
+        explode: false
+        in: path
+        name: projectId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantProjectV1DTO'
+          description: Participant projects information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant project information by ID
+      tags:
+      - Participant
+  /v1/participants/{login}/points:
+    get:
+      operationId: getPointsByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantPointsV1DTO'
+          description: Participant points
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant points information by login
+      tags:
+      - Participant
+  /v1/participants/{login}/logtime:
+    get:
+      operationId: getLogWeeklyAvgHoursByLoginAndDate
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: "Date. The average logtime will be calculated for the week that\
+          \ includes the specified date. If not specified, the current date is used\
+          \ by default"
+        example: 2024-01-29
+        explode: true
+        in: query
+        name: date
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                description: logtimeWeeklyAvgHours
+                example: 3.25
+                format: double
+                type: number
+          description: Average week logtime
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns an average week logtime by login
+      tags:
+      - Participant
+  /v1/participants/{login}/feedback:
+    get:
+      operationId: getParticipantFeedbackByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantFeedbackV1DTO'
+          description: Average participant feedback points
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns average participant feedback points by login
+      tags:
+      - Participant
+  /v1/participants/{login}/experience-history:
+    get:
+      operationId: getXpHistoryByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantXpHistoryV1DTO'
+          description: List of participant XP accruals
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of participant XP accruals by login
+      tags:
+      - Participant
+  /v1/participants/{login}/courses:
+    get:
+      operationId: getParticipantCoursesByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      - description: Course status
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - ASSIGNED
+          - REGISTERED
+          - IN_PROGRESS
+          - ACCEPTED
+          - FAILED
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantCoursesV1DTO'
+          description: Participant courses information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant courses information by login
+      tags:
+      - Participant
+  /v1/participants/{login}/courses/{courseId}:
+    get:
+      operationId: getParticipantCourseByLoginAndCourseId
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Course ID
+        example: 12311
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantCourseV1DTO'
+          description: Participant course information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant course information by ID
+      tags:
+      - Participant
+  /v1/participants/{login}/coalition:
+    get:
+      operationId: getCoalitionByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantCoalitionV1DTO'
+          description: Participant coalition information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns participant coalition information by login
+      tags:
+      - Participant
+  /v1/participants/{login}/badges:
+    get:
+      operationId: getBadgesByLogin
+      parameters:
+      - description: Login
+        example: bibikov-lukyan
+        explode: false
+        in: path
+        name: login
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantBadgesV1DTO'
+          description: List of participant badges
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of participant badges by login
+      tags:
+      - Participant
+  /v1/graph:
+    get:
+      operationId: getGraph
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphV1DTO'
+          description: Participant projects map
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a participant projects map
+      tags:
+      - Graph
+  /v1/events:
+    get:
+      operationId: getEvents
+      parameters:
+      - description: "Date and time of start of the sample, inclusive (in UTC)"
+        example: 2024-01-23T00:00:00Z
+        explode: true
+        in: query
+        name: from
+        required: true
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: "Date and time of end of the sample, inclusive (in UTC)"
+        example: 2024-01-24T00:00:00Z
+        explode: true
+        in: query
+        name: to
+        required: true
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Event type
+        explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - ACTIVITY
+          - EXAM
+          - TEST
+          type: string
+        style: form
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsV1DTO'
+          description: List of events
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of events
+      tags:
+      - Event
+  /v1/courses/{courseId}:
+    get:
+      operationId: getCourseByCourseId
+      parameters:
+      - description: Course ID
+        example: 123131
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseV1DTO'
+          description: Course information
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns course information by ID
+      tags:
+      - Course
+  /v1/coalitions/{coalitionId}/participants:
+    get:
+      operationId: getParticipantsByCoalitionId
+      parameters:
+      - description: Coalition ID
+        example: 319
+        explode: false
+        in: path
+        name: coalitionId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int32
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantLoginsV1DTO'
+          description: List of participants in a coalition
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of participants in a coalition by ID
+      tags:
+      - Coalition
+  /v1/clusters/{clusterId}/map:
+    get:
+      operationId: getParticipantsByCoalitionId_1
+      parameters:
+      - description: Cluster ID
+        example: 825
+        explode: false
+        in: path
+        name: clusterId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int32
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          minimum: 0
+          type: integer
+        style: form
+      - description: "If true, occupied seats are returned. If false - only free seats\
+          \ are returned. If not specified - all seats are listed"
+        explode: true
+        in: query
+        name: occupied
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterMapV1DTO'
+          description: Cluster map
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a cluster map
+      tags:
+      - Cluster
+  /v1/campuses:
+    get:
+      operationId: getCampuses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampusesV1DTO'
+          description: List of campuses
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of campuses
+      tags:
+      - Campus
+  /v1/campuses/{campusId}/participants:
+    get:
+      operationId: getParticipantsByCampusId
+      parameters:
+      - description: Campus ID
+        example: ff19a3a7-12f5-4332-9582-624519c3eaea
+        explode: false
+        in: path
+        name: campusId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int64
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantLoginsV1DTO'
+          description: List of participants in a campus
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of participants in a campus by ID
+      tags:
+      - Campus
+  /v1/campuses/{campusId}/coalitions:
+    get:
+      operationId: getCoalitionsByCampus
+      parameters:
+      - description: Campus ID
+        example: ff19a3a7-12f5-4332-9582-624519c3eaea
+        explode: false
+        in: path
+        name: campusId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Maximum number of records to be returned
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: int32
+          maximum: 1000
+          minimum: 0
+          type: integer
+        style: form
+      - description: Number of records to skip for pagination
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          minimum: 0
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoalitionsV1DTO'
+          description: List of coalitions in a campus
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of coalitions in a campus by ID
+      tags:
+      - Campus
+  /v1/campuses/{campusId}/clusters:
+    get:
+      operationId: getClustersByCampus
+      parameters:
+      - description: Campus ID
+        example: ff19a3a7-12f5-4332-9582-624519c3eaea
+        explode: false
+        in: path
+        name: campusId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClustersV1DTO'
+          description: List of clusters in a campus
+        "400":
+          content:
+            application/json:
+              example:
+                status: 400
+                exceptionUUID: izP1aFojnJ
+                code: BAD_REQUEST
+                message: Limit must be positive number
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                status: 403
+                exceptionUUID: izP1aFojnJ
+                code: FORBIDDEN
+                message: Forbidden
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                status: 404
+                exceptionUUID: izP1aFojnJ
+                code: NOT_FOUND
+                message: Not found campus by id=ff19a3a7-12f5-4332-9582-624519c3eaea
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Not found
+        "429":
+          description: Too Many Requests
+        "500":
+          content:
+            application/json:
+              example:
+                status: 500
+                exceptionUUID: izP1aFojnJ
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDTO'
+          description: Internal Server Error
+      summary: Returns a list of clusters in a campus by ID
+      tags:
+      - Campus
+components:
+  schemas:
+    ErrorResponseDTO:
+      description: ErrorResponseDTO
+      example:
+        exceptionUUID: exceptionUUID
+        code: code
+        message: message
+        status: 0
+      properties:
+        status:
+          description: status
+          format: int32
+          type: integer
+        exceptionUUID:
+          description: a unique generated error code from the service
+          type: string
+        code:
+          description: code
+          type: string
+        message:
+          description: message
+          type: string
+      required:
+      - code
+      - exceptionUUID
+      - message
+      - status
+      type: object
+    SaleV1DTO:
+      description: Sale
+      example:
+        startDateTime: 2024-01-24T11:30:00Z
+        progressPercentage: 97
+        type: CRP
+        status: PLANNED
+      properties:
+        type:
+          description: Type of review points
+          enum:
+          - PRP
+          - CRP
+          example: CRP
+          type: string
+        status:
+          description: Sale status
+          enum:
+          - NON_ACTIVE
+          - ACTIVE
+          - PLANNED
+          example: PLANNED
+          type: string
+        startDateTime:
+          description: Date and time of the sale start (UTC)
+          example: 2024-01-24T11:30:00Z
+          format: date-time
+          type: string
+        progressPercentage:
+          description: Percentage of sale progress
+          example: 97
+          format: int32
+          type: integer
+      required:
+      - status
+      - type
+      type: object
+    SalesV1DTO:
+      description: Sales
+      example:
+        sales:
+        - startDateTime: 2024-01-24T11:30:00Z
+          progressPercentage: 97
+          type: CRP
+          status: PLANNED
+        - startDateTime: 2024-01-24T11:30:00Z
+          progressPercentage: 97
+          type: CRP
+          status: PLANNED
+      properties:
+        sales:
+          description: Array of sales data
+          items:
+            $ref: '#/components/schemas/SaleV1DTO'
+          type: array
+      required:
+      - sales
+      type: object
+    ConditionRuleGroupV1DTO:
+      description: Condition group objects
+      example:
+        logicalOperator: OR
+        rulesInGroup:
+        - logicalOperator: AND
+          value:
+            subFieldValue: REGISTERED/IN PROGRESS
+            fieldName: Projects in status
+            value:
+            - value: SQL_exam_test
+              key: "19885"
+            - value: SQL_exam_test
+              key: "19885"
+            operator: <
+            fieldId: 1
+            subFieldKey: "1"
+        - logicalOperator: AND
+          value:
+            subFieldValue: REGISTERED/IN PROGRESS
+            fieldName: Projects in status
+            value:
+            - value: SQL_exam_test
+              key: "19885"
+            - value: SQL_exam_test
+              key: "19885"
+            operator: <
+            fieldId: 1
+            subFieldKey: "1"
+      properties:
+        logicalOperator:
+          description: The logical condition operator
+          enum:
+          - OR
+          - AND
+          example: OR
+          type: string
+        rulesInGroup:
+          description: Array of conditions in the condition group
+          items:
+            $ref: '#/components/schemas/ConditionRuleV1DTO'
+          type: array
+      required:
+      - rulesInGroup
+      type: object
+    ConditionRuleV1DTO:
+      description: Condition in the condition group
+      example:
+        logicalOperator: AND
+        value:
+          subFieldValue: REGISTERED/IN PROGRESS
+          fieldName: Projects in status
+          value:
+          - value: SQL_exam_test
+            key: "19885"
+          - value: SQL_exam_test
+            key: "19885"
+          operator: <
+          fieldId: 1
+          subFieldKey: "1"
+      properties:
+        logicalOperator:
+          description: The logical condition operator
+          enum:
+          - OR
+          - AND
+          example: AND
+          type: string
+        value:
+          $ref: '#/components/schemas/ConditionRuleValueV1DTO'
+      required:
+      - value
+      type: object
+    ConditionRuleValueV1DTO:
+      description: The object of the condition description
+      example:
+        subFieldValue: REGISTERED/IN PROGRESS
+        fieldName: Projects in status
+        value:
+        - value: SQL_exam_test
+          key: "19885"
+        - value: SQL_exam_test
+          key: "19885"
+        operator: <
+        fieldId: 1
+        subFieldKey: "1"
+      properties:
+        fieldId:
+          description: Field ID
+          example: 1
+          format: int64
+          type: integer
+        fieldName:
+          description: Field Name
+          example: Projects in status
+          type: string
+        subFieldKey:
+          description: Subfield ID
+          example: "1"
+          type: string
+        subFieldValue:
+          description: Subfield Name
+          example: REGISTERED/IN PROGRESS
+          type: string
+        operator:
+          description: Condition value operator
+          example: <
+          type: string
+        value:
+          description: Array of condition values
+          items:
+            $ref: '#/components/schemas/ConditionValueValueV1DTO'
+          type: array
+      required:
+      - fieldId
+      - fieldName
+      - operator
+      - subFieldKey
+      - subFieldValue
+      - value
+      type: object
+    ConditionValueValueV1DTO:
+      description: Array of condition values
+      example:
+        value: SQL_exam_test
+        key: "19885"
+      properties:
+        key:
+          description: The value of the condition
+          example: "19885"
+          type: string
+        value:
+          description: Name value of the condition
+          example: SQL_exam_test
+          type: string
+      required:
+      - key
+      type: object
+    ProjectV1DTO:
+      description: Project
+      example:
+        durationHours: 20
+        startConditions:
+        - logicalOperator: OR
+          rulesInGroup:
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+        - logicalOperator: OR
+          rulesInGroup:
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+        xp: 200
+        description: Групповой проект на освоение библиотеки regex
+        title: P01D06
+        type: GROUP
+        projectId: 134411
+        courseId: 452341
+      properties:
+        projectId:
+          description: Project ID
+          example: 134411
+          format: int64
+          type: integer
+        title:
+          description: Project name
+          example: P01D06
+          type: string
+        description:
+          description: Project description
+          example: Групповой проект на освоение библиотеки regex
+          type: string
+        durationHours:
+          description: Project duration (in hours)
+          example: 20
+          format: int32
+          type: integer
+        xp:
+          description: XP per Project
+          example: 200
+          format: int32
+          type: integer
+        type:
+          description: Project type
+          enum:
+          - INDIVIDUAL
+          - GROUP
+          - EXAM
+          - EXAM_TEST
+          example: GROUP
+          type: string
+        startConditions:
+          description: Array of condition group objects
+          items:
+            $ref: '#/components/schemas/ConditionRuleGroupV1DTO'
+          type: array
+        courseId:
+          description: Course ID
+          example: 452341
+          format: int64
+          type: integer
+      required:
+      - description
+      - durationHours
+      - projectId
+      - title
+      - type
+      type: object
+    ParticipantLoginsV1DTO:
+      description: Participant logins
+      example:
+        participants:
+        - bibikov-lukyan
+        - bibikov-lukyan
+      properties:
+        participants:
+          description: Array of participant logins
+          items:
+            example: bibikov-lukyan
+            type: string
+          type: array
+      required:
+      - participants
+      type: object
+    ParticipantCampusV1DTO:
+      description: Participant Campus
+      example:
+        id: ff19a3a7-12f5-4332-9582-624519c3eaea
+        shortName: Hogwarts
+      properties:
+        id:
+          description: Campus ID
+          example: ff19a3a7-12f5-4332-9582-624519c3eaea
+          format: uuid
+          type: string
+        shortName:
+          description: Short campus name
+          example: Hogwarts
+          type: string
+      required:
+      - id
+      - shortName
+      type: object
+    ParticipantV1DTO:
+      description: Participant
+      example:
+        parallelName: Core program
+        level: 0
+        campus:
+          id: ff19a3a7-12f5-4332-9582-624519c3eaea
+          shortName: Hogwarts
+        className: ADONIS
+        expToNextLevel: 399
+        login: bibikov-lukyan
+        expValue: 100
+        status: Active
+      properties:
+        login:
+          description: Participant login
+          example: bibikov-lukyan
+          type: string
+        className:
+          description: Participant class name (wave)
+          example: ADONIS
+          type: string
+        parallelName:
+          description: Participant parallel name (edu form)
+          example: Core program
+          type: string
+        expValue:
+          description: Experience points
+          example: 100
+          format: int64
+          type: integer
+        level:
+          description: Participant level
+          example: 0
+          format: int32
+          type: integer
+        expToNextLevel:
+          description: Number of experience points to the next level
+          example: 399
+          format: int64
+          type: integer
+        campus:
+          $ref: '#/components/schemas/ParticipantCampusV1DTO'
+        status:
+          description: Participant status
+          enum:
+          - ACTIVE
+          - TEMPORARY_BLOCKING
+          - EXPELLED
+          - BLOCKED
+          - FROZEN
+          example: Active
+          type: string
+      required:
+      - campus
+      - expToNextLevel
+      - expValue
+      - level
+      - login
+      - status
+      type: object
+    ParticipantWorkstationV1DTO:
+      description: Participant Workstation
+      example:
+        number: 24
+        clusterName: Ocean
+        clusterId: 854
+        row: a
+      properties:
+        clusterId:
+          description: Cluster ID
+          example: 854
+          format: int64
+          type: integer
+        clusterName:
+          description: Cluster name
+          example: Ocean
+          type: string
+        row:
+          description: Row of a workplace
+          example: a
+          type: string
+        number:
+          description: Number of a workplace
+          example: 24
+          format: int32
+          type: integer
+      required:
+      - clusterId
+      - clusterName
+      - number
+      - row
+      type: object
+    ParticipantSkillV1DTO:
+      description: Participant Skill
+      example:
+        name: Java
+        points: 80
+      properties:
+        name:
+          description: Skill name
+          example: Java
+          type: string
+        points:
+          description: Skill points
+          example: 80
+          format: int32
+          type: integer
+      required:
+      - name
+      - points
+      type: object
+    ParticipantSkillsV1DTO:
+      description: Participant Skills
+      example:
+        skills:
+        - name: Java
+          points: 80
+        - name: Java
+          points: 80
+      properties:
+        skills:
+          description: Array of skills
+          items:
+            $ref: '#/components/schemas/ParticipantSkillV1DTO'
+          type: array
+      required:
+      - skills
+      type: object
+    ParticipantProjectV1DTO:
+      description: Participant Project
+      example:
+        completionDateTime: 2024-01-23T00:00:00Z
+        id: 13453
+        finalPercentage: 110
+        title: String+
+        type: INDIVIDUAL
+        teamMembers:
+        - login: yanchin-kim
+          isTeamlead: true
+        - login: yanchin-kim
+          isTeamlead: true
+        courseId: 452341
+        status: REGISTERED
+      properties:
+        id:
+          description: Project ID
+          example: 13453
+          format: int64
+          type: integer
+        title:
+          description: Project name
+          example: String+
+          type: string
+        type:
+          description: Project type
+          enum:
+          - INDIVIDUAL
+          - GROUP
+          - EXAM
+          - EXAM_TEST
+          example: INDIVIDUAL
+          type: string
+        status:
+          description: Project status
+          enum:
+          - ASSIGNED
+          - REGISTERED
+          - IN_PROGRESS
+          - IN_REVIEWS
+          - ACCEPTED
+          - FAILED
+          example: REGISTERED
+          type: string
+        finalPercentage:
+          description: Final percentage of completion
+          example: 110
+          format: int32
+          type: integer
+        completionDateTime:
+          description: Date and time of the last completion (UTC)
+          example: 2024-01-23T00:00:00Z
+          format: date-time
+          type: string
+        teamMembers:
+          description: Team members of the last attempt
+          items:
+            $ref: '#/components/schemas/TeamMemberV1DTO'
+          type: array
+        courseId:
+          description: ID of the course where the project is located
+          example: 452341
+          format: int64
+          type: integer
+      required:
+      - id
+      - status
+      - title
+      - type
+      type: object
+    ParticipantProjectsV1DTO:
+      description: Participant Projects
+      example:
+        projects:
+        - completionDateTime: 2024-01-23T00:00:00Z
+          id: 13453
+          finalPercentage: 110
+          title: String+
+          type: INDIVIDUAL
+          teamMembers:
+          - login: yanchin-kim
+            isTeamlead: true
+          - login: yanchin-kim
+            isTeamlead: true
+          courseId: 452341
+          status: REGISTERED
+        - completionDateTime: 2024-01-23T00:00:00Z
+          id: 13453
+          finalPercentage: 110
+          title: String+
+          type: INDIVIDUAL
+          teamMembers:
+          - login: yanchin-kim
+            isTeamlead: true
+          - login: yanchin-kim
+            isTeamlead: true
+          courseId: 452341
+          status: REGISTERED
+      properties:
+        projects:
+          description: Array of projects
+          items:
+            $ref: '#/components/schemas/ParticipantProjectV1DTO'
+          type: array
+      required:
+      - projects
+      type: object
+    TeamMemberV1DTO:
+      description: Team Member
+      example:
+        login: yanchin-kim
+        isTeamlead: true
+      properties:
+        login:
+          description: Team member login
+          example: yanchin-kim
+          type: string
+        isTeamlead:
+          description: Team member role
+          example: true
+          type: boolean
+      required:
+      - isTeamlead
+      - login
+      type: object
+    ParticipantPointsV1DTO:
+      description: Participant Points
+      example:
+        codeReviewPoints: 5
+        coins: 4
+        peerReviewPoints: 10
+      properties:
+        peerReviewPoints:
+          description: Participant’s number of Peer Review Points
+          example: 10
+          format: int32
+          type: integer
+        codeReviewPoints:
+          description: Participant’s number of Code Review Points
+          example: 5
+          format: int32
+          type: integer
+        coins:
+          description: Participant’s number of coins
+          example: 4
+          format: int32
+          type: integer
+      required:
+      - codeReviewPoints
+      - coins
+      - peerReviewPoints
+      type: object
+    ParticipantFeedbackV1DTO:
+      description: Participant Feedback
+      example:
+        averageVerifierFriendliness: 3.5
+        averageVerifierPunctuality: 4
+        averageVerifierInterest: 3.27
+        averageVerifierThoroughness: 3.99
+      properties:
+        averageVerifierPunctuality:
+          description: Average punctuality score for a peer review
+          example: 4
+          format: double
+          type: number
+        averageVerifierInterest:
+          description: Average interest score for a peer review
+          example: 3.27
+          format: double
+          type: number
+        averageVerifierThoroughness:
+          description: Average thoroughness score for a peer review
+          example: 3.99
+          format: double
+          type: number
+        averageVerifierFriendliness:
+          description: Average friendliness score for a peer review
+          example: 3.5
+          format: double
+          type: number
+      type: object
+    ParticipantXpHistoryItemV1DTO:
+      description: Xp History Item
+      example:
+        accrualDateTime: 2024-01-24T00:00:00Z
+        expValue: 100
+      properties:
+        expValue:
+          description: XP value
+          example: 100
+          format: int64
+          type: integer
+        accrualDateTime:
+          description: Date and time of XP accrual (UTC)
+          example: 2024-01-24T00:00:00Z
+          format: date-time
+          type: string
+      required:
+      - accrualDateTime
+      - expValue
+      type: object
+    ParticipantXpHistoryV1DTO:
+      description: Xp History
+      example:
+        expHistory:
+        - accrualDateTime: 2024-01-24T00:00:00Z
+          expValue: 100
+        - accrualDateTime: 2024-01-24T00:00:00Z
+          expValue: 100
+      properties:
+        expHistory:
+          description: Array of xp history items
+          items:
+            $ref: '#/components/schemas/ParticipantXpHistoryItemV1DTO'
+          type: array
+      required:
+      - expHistory
+      type: object
+    ParticipantCourseV1DTO:
+      description: Participant Course
+      example:
+        completionDateTime: 2024-01-23T00:00:00Z
+        id: 341241
+        finalPercentage: 21
+        title: SQL Bootcamp
+        status: REGISTERED
+      properties:
+        id:
+          description: Course ID
+          example: 341241
+          format: int64
+          type: integer
+        title:
+          description: Course name
+          example: SQL Bootcamp
+          type: string
+        status:
+          description: Course status
+          enum:
+          - ASSIGNED
+          - REGISTERED
+          - IN_PROGRESS
+          - ACCEPTED
+          - FAILED
+          example: REGISTERED
+          type: string
+        finalPercentage:
+          description: Final percentage of completion
+          example: 21
+          format: int32
+          type: integer
+        completionDateTime:
+          description: Date and time of the last completion (UTC)
+          example: 2024-01-23T00:00:00Z
+          format: date-time
+          type: string
+      required:
+      - id
+      - status
+      - title
+      type: object
+    ParticipantCoursesV1DTO:
+      description: Participant Courses
+      example:
+        courses:
+        - completionDateTime: 2024-01-23T00:00:00Z
+          id: 341241
+          finalPercentage: 21
+          title: SQL Bootcamp
+          status: REGISTERED
+        - completionDateTime: 2024-01-23T00:00:00Z
+          id: 341241
+          finalPercentage: 21
+          title: SQL Bootcamp
+          status: REGISTERED
+      properties:
+        courses:
+          description: Array of courses
+          items:
+            $ref: '#/components/schemas/ParticipantCourseV1DTO'
+          type: array
+      required:
+      - courses
+      type: object
+    ParticipantCoalitionV1DTO:
+      description: Participant Coalition
+      example:
+        coalitionId: 319
+        name: Капибары
+        rank: 20
+      properties:
+        coalitionId:
+          description: Coalition ID
+          example: 319
+          format: int64
+          type: integer
+        name:
+          description: Coalition name
+          example: Капибары
+          type: string
+        rank:
+          description: Rank of the participant
+          example: 20
+          format: int32
+          type: integer
+      required:
+      - coalitionId
+      - name
+      type: object
+    ParticipantBadgeV1DTO:
+      description: Participant Badge
+      example:
+        name: Cheat
+        iconUrl: /public_any/b195ab4d-9587-4e29-9de0-ff33a8d8913e?path=badges/Cheater.png
+        receiptDateTime: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          description: Badge name
+          example: Cheat
+          type: string
+        receiptDateTime:
+          description: Date and time of the receipt (UTC)
+          format: date-time
+          type: string
+        iconUrl:
+          description: URL of the badge icon
+          example: /public_any/b195ab4d-9587-4e29-9de0-ff33a8d8913e?path=badges/Cheater.png
+          type: string
+      required:
+      - iconUrl
+      - name
+      - receiptDateTime
+      type: object
+    ParticipantBadgesV1DTO:
+      description: Participant Badges
+      example:
+        badges:
+        - name: Cheat
+          iconUrl: /public_any/b195ab4d-9587-4e29-9de0-ff33a8d8913e?path=badges/Cheater.png
+          receiptDateTime: 2000-01-23T04:56:07.000+00:00
+        - name: Cheat
+          iconUrl: /public_any/b195ab4d-9587-4e29-9de0-ff33a8d8913e?path=badges/Cheater.png
+          receiptDateTime: 2000-01-23T04:56:07.000+00:00
+      properties:
+        badges:
+          description: Array of badges
+          items:
+            $ref: '#/components/schemas/ParticipantBadgeV1DTO'
+          type: array
+      required:
+      - badges
+      type: object
+    GraphEdgeV1DTO:
+      description: Graph edge
+      example:
+        sourceHandle: d24d3b-jh75ii-left
+        id: d24d3bd24d3b-jh75ii-left-jh5fa4jh5fa4-da8784-right
+        source: d24d3b
+        targetHandle: jh5fa4-da8784-right
+        target: jh5fa4
+      properties:
+        id:
+          description: Edge ID
+          example: d24d3bd24d3b-jh75ii-left-jh5fa4jh5fa4-da8784-right
+          type: string
+        source:
+          description: Source node ID
+          example: d24d3b
+          type: string
+        target:
+          description: Target node ID
+          example: jh5fa4
+          type: string
+        sourceHandle:
+          description: Source handle ID
+          example: d24d3b-jh75ii-left
+          type: string
+        targetHandle:
+          description: Target handle ID
+          example: jh5fa4-da8784-right
+          type: string
+      required:
+      - id
+      - source
+      - sourceHandle
+      - target
+      - targetHandle
+      type: object
+    GraphNodeItemV1DTO:
+      description: Graph node item
+      example:
+        handles:
+        - d24d3b-jh75ii-left
+        - d24d3b-jh75ii-left
+        code: APP5
+        entityType: PROJECT
+        entityId: 12879
+        id: d24d3b-jh75ii
+      properties:
+        id:
+          description: Node item ID
+          example: d24d3b-jh75ii
+          type: string
+        code:
+          description: Node item code in the graph
+          example: APP5
+          type: string
+        handles:
+          description: Handles for connecting node items
+          items:
+            example: d24d3b-jh75ii-left
+            type: string
+          type: array
+          uniqueItems: true
+        entityType:
+          description: Node item type
+          enum:
+          - PROJECT
+          - COURSE
+          example: PROJECT
+          type: string
+        entityId:
+          description: ID of the entity linked to the node item
+          example: 12879
+          format: int64
+          type: integer
+      required:
+      - code
+      - entityId
+      - entityType
+      - handles
+      - id
+      type: object
+    GraphNodeV1DTO:
+      description: Graph node
+      example:
+        id: d24d3b
+        label: APP
+        items:
+        - handles:
+          - d24d3b-jh75ii-left
+          - d24d3b-jh75ii-left
+          code: APP5
+          entityType: PROJECT
+          entityId: 12879
+          id: d24d3b-jh75ii
+        - handles:
+          - d24d3b-jh75ii-left
+          - d24d3b-jh75ii-left
+          code: APP5
+          entityType: PROJECT
+          entityId: 12879
+          id: d24d3b-jh75ii
+      properties:
+        id:
+          description: Node ID
+          example: d24d3b
+          type: string
+        label:
+          description: Node name
+          example: APP
+          type: string
+        items:
+          description: Node items
+          items:
+            $ref: '#/components/schemas/GraphNodeItemV1DTO'
+          type: array
+      required:
+      - id
+      - items
+      - label
+      type: object
+    GraphV1DTO:
+      description: Graph
+      example:
+        nodes:
+        - id: d24d3b
+          label: APP
+          items:
+          - handles:
+            - d24d3b-jh75ii-left
+            - d24d3b-jh75ii-left
+            code: APP5
+            entityType: PROJECT
+            entityId: 12879
+            id: d24d3b-jh75ii
+          - handles:
+            - d24d3b-jh75ii-left
+            - d24d3b-jh75ii-left
+            code: APP5
+            entityType: PROJECT
+            entityId: 12879
+            id: d24d3b-jh75ii
+        - id: d24d3b
+          label: APP
+          items:
+          - handles:
+            - d24d3b-jh75ii-left
+            - d24d3b-jh75ii-left
+            code: APP5
+            entityType: PROJECT
+            entityId: 12879
+            id: d24d3b-jh75ii
+          - handles:
+            - d24d3b-jh75ii-left
+            - d24d3b-jh75ii-left
+            code: APP5
+            entityType: PROJECT
+            entityId: 12879
+            id: d24d3b-jh75ii
+        edges:
+        - sourceHandle: d24d3b-jh75ii-left
+          id: d24d3bd24d3b-jh75ii-left-jh5fa4jh5fa4-da8784-right
+          source: d24d3b
+          targetHandle: jh5fa4-da8784-right
+          target: jh5fa4
+        - sourceHandle: d24d3b-jh75ii-left
+          id: d24d3bd24d3b-jh75ii-left-jh5fa4jh5fa4-da8784-right
+          source: d24d3b
+          targetHandle: jh5fa4-da8784-right
+          target: jh5fa4
+      properties:
+        nodes:
+          description: Array of graph nodes
+          items:
+            $ref: '#/components/schemas/GraphNodeV1DTO'
+          type: array
+        edges:
+          description: Array of graph edges
+          items:
+            $ref: '#/components/schemas/GraphEdgeV1DTO'
+          type: array
+      required:
+      - edges
+      - nodes
+      type: object
+    EventV1DTO:
+      description: Event
+      example:
+        startDateTime: 2024-01-24T10:00:00Z
+        registerCount: 10
+        name: Мастер-класс по лепке из глины
+        organizers:
+        - bibikov_lukyan
+        - bibikov_lukyan
+        description: Будем учиться лепить из глины салатницу
+        location: Кластер Ocean
+        id: 312
+        type: Workshop
+        endDateTime: 2024-01-24T10:00:00Z
+        capacity: 20
+      properties:
+        id:
+          description: Event ID
+          example: 312
+          format: int64
+          type: integer
+        type:
+          description: Event type
+          example: Workshop
+          type: string
+        name:
+          description: Event name
+          example: Мастер-класс по лепке из глины
+          type: string
+        description:
+          description: Event description
+          example: Будем учиться лепить из глины салатницу
+          type: string
+        location:
+          description: Location of the event
+          example: Кластер Ocean
+          type: string
+        startDateTime:
+          description: Date and time of the start of the event (UTC)
+          example: 2024-01-24T10:00:00Z
+          format: date-time
+          type: string
+        endDateTime:
+          description: Date and time of the end of the event (UTC)
+          example: 2024-01-24T10:00:00Z
+          format: date-time
+          type: string
+        organizers:
+          description: Array of strings with the logins of the organizing participants
+          items:
+            example: bibikov_lukyan
+            type: string
+          type: array
+        capacity:
+          description: Maximum number of participants who can register for the event
+          example: 20
+          format: int32
+          type: integer
+        registerCount:
+          description: Current number of participants registered for the event
+          example: 10
+          format: int32
+          type: integer
+      required:
+      - capacity
+      - endDateTime
+      - id
+      - location
+      - name
+      - organizers
+      - registerCount
+      - startDateTime
+      - type
+      type: object
+    EventsV1DTO:
+      description: Events
+      example:
+        events:
+        - startDateTime: 2024-01-24T10:00:00Z
+          registerCount: 10
+          name: Мастер-класс по лепке из глины
+          organizers:
+          - bibikov_lukyan
+          - bibikov_lukyan
+          description: Будем учиться лепить из глины салатницу
+          location: Кластер Ocean
+          id: 312
+          type: Workshop
+          endDateTime: 2024-01-24T10:00:00Z
+          capacity: 20
+        - startDateTime: 2024-01-24T10:00:00Z
+          registerCount: 10
+          name: Мастер-класс по лепке из глины
+          organizers:
+          - bibikov_lukyan
+          - bibikov_lukyan
+          description: Будем учиться лепить из глины салатницу
+          location: Кластер Ocean
+          id: 312
+          type: Workshop
+          endDateTime: 2024-01-24T10:00:00Z
+          capacity: 20
+      properties:
+        events:
+          description: Array of events
+          items:
+            $ref: '#/components/schemas/EventV1DTO'
+          type: array
+      required:
+      - events
+      type: object
+    CourseV1DTO:
+      description: Course
+      example:
+        durationHours: 30
+        startConditions:
+        - logicalOperator: OR
+          rulesInGroup:
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+        - logicalOperator: OR
+          rulesInGroup:
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+          - logicalOperator: AND
+            value:
+              subFieldValue: REGISTERED/IN PROGRESS
+              fieldName: Projects in status
+              value:
+              - value: SQL_exam_test
+                key: "19885"
+              - value: SQL_exam_test
+                key: "19885"
+              operator: <
+              fieldId: 1
+              subFieldKey: "1"
+        xp: 1500
+        description: Набор проектов на освоение синтаксиса SQL.
+        title: SQL Bootcamp
+        courseId: 123131
+      properties:
+        courseId:
+          description: Course ID
+          example: 123131
+          format: int64
+          type: integer
+        title:
+          description: Course name
+          example: SQL Bootcamp
+          type: string
+        description:
+          description: Course description
+          example: Набор проектов на освоение синтаксиса SQL.
+          type: string
+        durationHours:
+          description: Course duration (in hours)
+          example: 30
+          format: int32
+          type: integer
+        xp:
+          description: XP per course
+          example: 1500
+          format: int32
+          type: integer
+        startConditions:
+          description: Array of condition group objects
+          items:
+            $ref: '#/components/schemas/ConditionRuleGroupV1DTO'
+          type: array
+      required:
+      - courseId
+      - description
+      - durationHours
+      - title
+      - xp
+      type: object
+    ClusterMapV1DTO:
+      description: Cluster map
+      example:
+        clusterMap:
+        - number: 24
+          row: a
+          login: bibikov-lukyan
+        - number: 24
+          row: a
+          login: bibikov-lukyan
+      properties:
+        clusterMap:
+          description: Array of cluster places
+          items:
+            $ref: '#/components/schemas/WorkplaceV1DTO'
+          type: array
+      required:
+      - clusterMap
+      type: object
+    WorkplaceV1DTO:
+      description: Workplace
+      example:
+        number: 24
+        row: a
+        login: bibikov-lukyan
+      properties:
+        row:
+          description: Row of a workplace
+          example: a
+          type: string
+        number:
+          description: Number of a workplace
+          example: 24
+          format: int32
+          type: integer
+        login:
+          description: Login of the participant occupying the place
+          example: bibikov-lukyan
+          type: string
+      required:
+      - number
+      - row
+      type: object
+    CampusV1DTO:
+      description: Campus
+      example:
+        fullName: Hogwarts School of Witchcraft and Wizardry
+        id: ff19a3a7-12f5-4332-9582-624519c3eaea
+        shortName: Hogwarts
+      properties:
+        id:
+          description: Campus ID
+          example: ff19a3a7-12f5-4332-9582-624519c3eaea
+          format: uuid
+          type: string
+        shortName:
+          description: Short campus name
+          example: Hogwarts
+          type: string
+        fullName:
+          description: Full campus name
+          example: Hogwarts School of Witchcraft and Wizardry
+          type: string
+      required:
+      - fullName
+      - id
+      - shortName
+      type: object
+    CampusesV1DTO:
+      description: Campuses
+      example:
+        campuses:
+        - fullName: Hogwarts School of Witchcraft and Wizardry
+          id: ff19a3a7-12f5-4332-9582-624519c3eaea
+          shortName: Hogwarts
+        - fullName: Hogwarts School of Witchcraft and Wizardry
+          id: ff19a3a7-12f5-4332-9582-624519c3eaea
+          shortName: Hogwarts
+      properties:
+        campuses:
+          description: Array of campus objects
+          items:
+            $ref: '#/components/schemas/CampusV1DTO'
+          type: array
+      required:
+      - campuses
+      type: object
+    CoalitionV1DTO:
+      description: Coalition
+      example:
+        coalitionId: 319
+        name: Капибары
+      properties:
+        coalitionId:
+          description: Coalition ID
+          example: 319
+          format: int64
+          type: integer
+        name:
+          description: Coalition name
+          example: Капибары
+          type: string
+      required:
+      - coalitionId
+      - name
+      type: object
+    CoalitionsV1DTO:
+      description: Coalitions
+      example:
+        coalitions:
+        - coalitionId: 319
+          name: Капибары
+        - coalitionId: 319
+          name: Капибары
+      properties:
+        coalitions:
+          description: Array of coalition objects
+          items:
+            $ref: '#/components/schemas/CoalitionV1DTO'
+          type: array
+      required:
+      - coalitions
+      type: object
+    ClusterV1DTO:
+      description: Cluster
+      example:
+        availableCapacity: 22
+        name: Ocean
+        id: 824
+        floor: 2
+        capacity: 30
+      properties:
+        id:
+          description: Cluster ID
+          example: 824
+          format: int64
+          type: integer
+        name:
+          description: Cluster name
+          example: Ocean
+          type: string
+        capacity:
+          description: Cluster capacity
+          example: 30
+          format: int32
+          type: integer
+        availableCapacity:
+          description: Number of available seats
+          example: 22
+          format: int32
+          type: integer
+        floor:
+          description: The floor where the cluster is located
+          example: 2
+          format: int32
+          type: integer
+      required:
+      - availableCapacity
+      - capacity
+      - floor
+      - id
+      - name
+      type: object
+    ClustersV1DTO:
+      description: Clusters
+      example:
+        clusters:
+        - availableCapacity: 22
+          name: Ocean
+          id: 824
+          floor: 2
+          capacity: 30
+        - availableCapacity: 22
+          name: Ocean
+          id: 824
+          floor: 2
+          capacity: 30
+      properties:
+        clusters:
+          description: Array of cluster objects
+          items:
+            $ref: '#/components/schemas/ClusterV1DTO'
+          type: array
+      required:
+      - clusters
+      type: object
+  securitySchemes:
+    Authorization:
+      in: header
+      name: Authorization
+      type: apiKey
